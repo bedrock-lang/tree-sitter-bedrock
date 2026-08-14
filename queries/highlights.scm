@@ -63,7 +63,7 @@
 (type_param (IDENT) @type.parameter)
 
 (function (IDENT) @function)
-(proc_def (IDENT) @function)
+(proc (IDENT) @function)
 (method_def (IDENT) @function.method)
 (extern_def (IDENT) @function)
 
@@ -84,7 +84,7 @@
 
 (var_stmt (IDENT) @variable)
 (const_stmt (IDENT) @constant)
-(global_var_def (IDENT) @variable)
+(var_def (IDENT) @variable)
 (local_static_var_stmt (IDENT) @variable)
 (const_def (IDENT) @constant)
 (for_expr (IDENT) @variable)
