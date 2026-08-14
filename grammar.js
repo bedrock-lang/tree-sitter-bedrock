@@ -22,7 +22,7 @@ module.exports = grammar({
       $.import_def,
       $.function,
       $.proc,
-      // $.struct_def,
+      $.struct_def,
       // $.enum_def,
       // $.extern_def,
       // $.global_var_def,
@@ -87,6 +87,31 @@ module.exports = grammar({
       ')',
       optional($.block),
       'end'
+    ),
+
+    // structs //
+
+    struct_def: $ => seq(
+      optional($.pub),
+      'type',
+      $.IDENT,
+      optional($.type_params),
+      '=',
+      'struct',
+      optional($.struct_members),
+      'end'
+    ),
+    struct_members: $ => repeat1($.struct_member),
+    struct_member: $ => choice(
+      seq($.struct_field, ','),
+      $.method_def
+    ),
+
+    struct_field: $ => seq(
+      //todo:
+    ),
+
+    method_def: $ => choice(
     ),
 
     // Statements //

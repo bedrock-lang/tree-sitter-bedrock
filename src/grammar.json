@@ -24,6 +24,10 @@
         {
           "type": "SYMBOL",
           "name": "proc"
+        },
+        {
+          "type": "SYMBOL",
+          "name": "struct_def"
         }
       ]
     },
@@ -432,6 +436,104 @@
           "value": "end"
         }
       ]
+    },
+    "struct_def": {
+      "type": "SEQ",
+      "members": [
+        {
+          "type": "CHOICE",
+          "members": [
+            {
+              "type": "SYMBOL",
+              "name": "pub"
+            },
+            {
+              "type": "BLANK"
+            }
+          ]
+        },
+        {
+          "type": "STRING",
+          "value": "type"
+        },
+        {
+          "type": "SYMBOL",
+          "name": "IDENT"
+        },
+        {
+          "type": "CHOICE",
+          "members": [
+            {
+              "type": "SYMBOL",
+              "name": "type_params"
+            },
+            {
+              "type": "BLANK"
+            }
+          ]
+        },
+        {
+          "type": "STRING",
+          "value": "="
+        },
+        {
+          "type": "STRING",
+          "value": "struct"
+        },
+        {
+          "type": "CHOICE",
+          "members": [
+            {
+              "type": "SYMBOL",
+              "name": "struct_members"
+            },
+            {
+              "type": "BLANK"
+            }
+          ]
+        },
+        {
+          "type": "STRING",
+          "value": "end"
+        }
+      ]
+    },
+    "struct_members": {
+      "type": "REPEAT1",
+      "content": {
+        "type": "SYMBOL",
+        "name": "struct_member"
+      }
+    },
+    "struct_member": {
+      "type": "CHOICE",
+      "members": [
+        {
+          "type": "SEQ",
+          "members": [
+            {
+              "type": "SYMBOL",
+              "name": "struct_field"
+            },
+            {
+              "type": "STRING",
+              "value": ","
+            }
+          ]
+        },
+        {
+          "type": "SYMBOL",
+          "name": "method_def"
+        }
+      ]
+    },
+    "struct_field": {
+      "type": "CHOICE",
+      "members": []
+    },
+    "method_def": {
+      "type": "CHOICE",
+      "members": []
     },
     "statement": {
       "type": "CHOICE",

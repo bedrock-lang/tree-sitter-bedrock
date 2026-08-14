@@ -121,9 +121,18 @@
         {
           "type": "proc",
           "named": true
+        },
+        {
+          "type": "struct_def",
+          "named": true
         }
       ]
     }
+  },
+  {
+    "type": "method_def",
+    "named": true,
+    "fields": {}
   },
   {
     "type": "named_type",
@@ -261,6 +270,72 @@
     "fields": {}
   },
   {
+    "type": "struct_def",
+    "named": true,
+    "fields": {},
+    "children": {
+      "multiple": true,
+      "required": true,
+      "types": [
+        {
+          "type": "IDENT",
+          "named": true
+        },
+        {
+          "type": "pub",
+          "named": true
+        },
+        {
+          "type": "struct_members",
+          "named": true
+        },
+        {
+          "type": "type_params",
+          "named": true
+        }
+      ]
+    }
+  },
+  {
+    "type": "struct_field",
+    "named": true,
+    "fields": {}
+  },
+  {
+    "type": "struct_member",
+    "named": true,
+    "fields": {},
+    "children": {
+      "multiple": false,
+      "required": true,
+      "types": [
+        {
+          "type": "method_def",
+          "named": true
+        },
+        {
+          "type": "struct_field",
+          "named": true
+        }
+      ]
+    }
+  },
+  {
+    "type": "struct_members",
+    "named": true,
+    "fields": {},
+    "children": {
+      "multiple": true,
+      "required": true,
+      "types": [
+        {
+          "type": "struct_member",
+          "named": true
+        }
+      ]
+    }
+  },
+  {
     "type": "type",
     "named": true,
     "fields": {},
@@ -373,6 +448,10 @@
     "named": false
   },
   {
+    "type": "=",
+    "named": false
+  },
+  {
     "type": "?",
     "named": false
   },
@@ -467,6 +546,14 @@
   },
   {
     "type": "str",
+    "named": false
+  },
+  {
+    "type": "struct",
+    "named": false
+  },
+  {
+    "type": "type",
     "named": false
   },
   {
