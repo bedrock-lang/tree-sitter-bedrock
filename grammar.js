@@ -198,7 +198,7 @@ module.exports = grammar({
       $.var_stmt,
       $.const_stmt,
       $.local_static_var_stmt,
-      // $.assign_stmt,
+      $.assign_stmt,
       // $.defer_stmt,
       // $.unsafe_stmt,
       // $.control_flow_stmt,
@@ -230,6 +230,18 @@ module.exports = grammar({
       $.IDENT,
       optional(seq(':', optional('?'), $.type)),
       '=',
+      $.expression,
+      ';'
+    ),
+
+    place_expr: $ => $.expression,
+    assign_stmt: $ => seq(
+      $.place_expr,
+      choice(
+        '=',
+        '+=', '-=', '*=', '/=', '%=',
+        '&=', '|=', '^=', '<<=', '>>='
+      ),
       $.expression,
       ';'
     ),
