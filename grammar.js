@@ -323,6 +323,71 @@ module.exports = grammar({
 
     and_expr: $ => "todo",
 
+    and_expr: $ => prec.left(3, seq(
+      $.comparison,
+      repeat(seq('&&', $.comparison))
+    )),
+
+    comparison: $ => prec.left(4, seq(
+      $.bitor_expr,
+      repeat(seq(
+        choice('==', '!=', '<', '>', '<=', '>='),
+        $.bitor_expr
+      ))
+    )),
+
+    bitor_expr: $ => prec.left(5, seq(
+      $.bitxor_expr,
+      repeat(seq('|', $.bitxor_expr))
+    )),
+
+    bitxor_expr: $ => prec.left(6, seq(
+      $.bitand_expr,
+      repeat(seq('^', $.bitand_expr))
+    )),
+
+    bitand_expr: $ => prec.left(7, seq(
+      $.shift_expr,
+      repeat(seq('&', $.shift_expr))
+    )),
+
+    shift_expr: $ => prec.left(8, seq(
+      $.range_expr,
+      repeat(seq(choice('<<', '>>'), $.range_expr))
+    )),
+
+    range_expr: $ => prec.left(9, seq(
+      $.additive,
+      optional(seq('..', $.additive))
+    )),
+
+    additive: $ => prec.left(10, seq(
+      $.multiplicative,
+      repeat(seq(choice('+', '-'), $.multiplicative))
+    )),
+
+    multiplicative: $ => prec.left(11, seq(
+      $.unary,
+      repeat(seq(choice('*', '/', '%'), $.unary))
+    )),
+
+    unary: $ => choice(
+      prec.right(12, seq(choice('-', '!', '~', '&', '*'), $.unary)),
+      $.postfix
+    ),
+
+    postfix: $ => prec.left(13, seq(
+      $.primary,
+      repeat($.suffix)
+    )),
+
+    suffix: $ => choice(
+      seq('.', $.IDENT),
+      seq('(', optional($.call_args), ')'),
+      seq('[', commaSep1($, $.expression), ']'),
+      '?'
+    ),
+
     primary: $ => choice(
       $.INTEGER,
       $.FLOAT,
