@@ -10,6 +10,10 @@ module.exports = grammar({
 
   word: $ => $.IDENT,
 
+  conflicts: $ => [
+    [$.result],
+  ],
+
   rules: {
     // program//
     program: $ => repeat($.item),
@@ -93,16 +97,51 @@ module.exports = grammar({
       'f32', 'f64',
       'bool', 'char', 'str',
       seq('*', $.type),
-      // $.array_type,
-      // $.named_type,
-      // $.func_type,
-      // $.proc_type
+      $.array_type,
+      $.named_type,
+      $.func_type,
+      $.proc_type
+    ),
+
+    array_type: $ => seq(
+      '[',
+      choice($.INTEGER, '_'),
+      ']',
+      $.type
+    ),
+
+    named_type: $ => seq(
+      $.IDENT,
+      optional(seq('[', commaSep1($, $.type), ']'))
+    ),
+
+    type_list: $ => commaSep1($, $.type),
+
+    func_type: $ => seq(
+      'func',
+      '(',
+      optional($.type_list),
+      ')',
+      $.result
+    ),
+
+    proc_type: $ => seq(
+      'proc',
+      '(',
+      optional($.type_list),
+      ')'
     ),
 
     // lexical tokens //
     IDENT: $ => /[A-Za-z_][A-Za-z0-9_]*/,
     line_comment: $ => token(seq('//', /.*/)),
     pub: $ => 'pub',
+    INTEGER: $ => token(choice(
+      seq('0x', /[0-9a-fA-F_]+/),
+      seq('0o', /[0-7_]+/),
+      seq('0b', /[01_]+/),
+      /[0-9_]+/
+    )),
   }
 });
 
