@@ -23,7 +23,7 @@ module.exports = grammar({
       $.function,
       $.proc,
       $.struct_def,
-      // $.enum_def,
+      $.enum_def,
       // $.extern_def,
       // $.global_var_def,
       // $.const_def
@@ -89,7 +89,7 @@ module.exports = grammar({
       'end'
     ),
 
-    // structs //
+    // Structs and Enums //
 
     struct_def: $ => seq(
       optional($.pub),
@@ -142,6 +142,19 @@ module.exports = grammar({
         'end'
       )
     ),
+
+    enum_def: $ => seq(
+      optional($.pub),
+      'type',
+      $.IDENT,
+      optional($.type_params),
+      '=',
+      'enum',
+      optional($.enum_variants),
+      'end'
+    ),
+    enum_variants: $ => commaSep1($, $.enum_variant),
+    enum_variant: $ => $.IDENT,
 
     // Statements //
     statement: $ => choice(
