@@ -309,7 +309,19 @@ module.exports = grammar({
     ),
 
     // expressions //
-    expression: $ => 'todo',
+    expression: $ => $.orelse_expr,
+
+    orelse_expr: $ => prec.left(1, seq(
+      $.or_expr,
+      repeat(seq('orelse', $.or_expr))
+    )),
+
+    or_expr: $ => prec.left(2, seq(
+      $.and_expr,
+      repeat(seq('||', $.and_expr))
+    )),
+
+    and_expr: $ => "todo",
 
     primary: $ => choice(
       $.INTEGER,
