@@ -1208,6 +1208,10 @@
         {
           "type": "SYMBOL",
           "name": "assign_stmt"
+        },
+        {
+          "type": "SYMBOL",
+          "name": "defer_stmt"
         }
       ]
     },
@@ -1449,6 +1453,65 @@
             }
           ]
         },
+        {
+          "type": "SYMBOL",
+          "name": "expression"
+        },
+        {
+          "type": "STRING",
+          "value": ";"
+        }
+      ]
+    },
+    "defer_stmt": {
+      "type": "SEQ",
+      "members": [
+        {
+          "type": "STRING",
+          "value": "defer"
+        },
+        {
+          "type": "CHOICE",
+          "members": [
+            {
+              "type": "SYMBOL",
+              "name": "var_stmt"
+            },
+            {
+              "type": "SYMBOL",
+              "name": "const_stmt"
+            },
+            {
+              "type": "SYMBOL",
+              "name": "assign_stmt"
+            },
+            {
+              "type": "SYMBOL",
+              "name": "control_flow_stmt"
+            },
+            {
+              "type": "SYMBOL",
+              "name": "return_stmt"
+            },
+            {
+              "type": "SYMBOL",
+              "name": "expr_stmt"
+            }
+          ]
+        }
+      ]
+    },
+    "control_flow_stmt": {
+      "type": "STRING",
+      "value": "todo"
+    },
+    "return_stmt": {
+      "type": "STRING",
+      "value": "todo"
+    },
+    "expr_stmt": {
+      "type": "SEQ",
+      "members": [
         {
           "type": "SYMBOL",
           "name": "expression"

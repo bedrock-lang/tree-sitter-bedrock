@@ -199,7 +199,7 @@ module.exports = grammar({
       $.const_stmt,
       $.local_static_var_stmt,
       $.assign_stmt,
-      // $.defer_stmt,
+      $.defer_stmt,
       // $.unsafe_stmt,
       // $.control_flow_stmt,
       // $.return_stmt,
@@ -245,6 +245,22 @@ module.exports = grammar({
       $.expression,
       ';'
     ),
+
+    defer_stmt: $ => seq(
+      'defer',
+      choice(
+        $.var_stmt,
+        $.const_stmt,
+        $.assign_stmt,
+        $.control_flow_stmt,
+        $.return_stmt,
+        $.expr_stmt
+      )
+    ),
+
+    control_flow_stmt: $ => "todo",
+    return_stmt: $ => "todo",
+    expr_stmt: $ => seq($.expression, ';'),
 
     // Types //
     type: $ => choice(
