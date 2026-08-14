@@ -30,6 +30,8 @@ npx tree-sitter build -o bedrock.so
 
 ### Neovim Integration (`nvim-treesitter`)
 
+<p align="center"> <img src="assets/nvim.png" alt="bedrock syntax highlighting in nvim" width="300" height="380" style=" border: 3px solid #C61F2B; box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15); object-fit: cover; " /> </p>
+
 Add the parser to your neovim configuration (tree-sitter-setup):
 
 1. **Store the parser in a nice place**
