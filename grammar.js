@@ -25,7 +25,7 @@ module.exports = grammar({
       $.struct_def,
       $.enum_def,
       $.extern_def,
-      // $.global_var_def,
+      $.var_def,
       // $.const_def
     ),
 
@@ -171,6 +171,27 @@ module.exports = grammar({
     enum_variants: $ => commaSep1($, $.enum_variant),
     enum_variant: $ => $.IDENT,
 
+    // var and const //
+    var_def: $ => seq(
+      optional($.pub),
+      'var',
+      $.IDENT,
+      optional(seq(':', optional('?'), $.type)),
+      '=',
+      $.expression,
+      ';'
+    ),
+
+    const_def: $ => seq(
+      optional($.pub),
+      'const',
+      $.IDENT,
+      optional(seq(':', optional('?'), $.type)),
+      '=',
+      $.expression,
+      ';'
+    ),
+
     // Statements //
     statement: $ => choice(
       // $.var_stmt,
@@ -226,6 +247,9 @@ module.exports = grammar({
       optional($.type_list),
       ')'
     ),
+
+    // expressions //
+    expression: $ => 'todo',
 
     // lexical tokens //
     IDENT: $ => /[A-Za-z_][A-Za-z0-9_]*/,

@@ -247,6 +247,10 @@
         {
           "type": "struct_def",
           "named": true
+        },
+        {
+          "type": "var_def",
+          "named": true
         }
       ]
     }
@@ -582,6 +586,33 @@
     }
   },
   {
+    "type": "var_def",
+    "named": true,
+    "fields": {},
+    "children": {
+      "multiple": true,
+      "required": true,
+      "types": [
+        {
+          "type": "IDENT",
+          "named": true
+        },
+        {
+          "type": "expression",
+          "named": true
+        },
+        {
+          "type": "pub",
+          "named": true
+        },
+        {
+          "type": "type",
+          "named": true
+        }
+      ]
+    }
+  },
+  {
     "type": "!",
     "named": false
   },
@@ -670,6 +701,10 @@
     "named": false
   },
   {
+    "type": "expression",
+    "named": true
+  },
+  {
     "type": "extern",
     "named": false
   },
@@ -756,6 +791,10 @@
   },
   {
     "type": "usize",
+    "named": false
+  },
+  {
+    "type": "var",
     "named": false
   }
 ]
