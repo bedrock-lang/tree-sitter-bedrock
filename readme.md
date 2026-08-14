@@ -17,11 +17,11 @@ Tree-sitter grammar for the **Bedrock** programming language.
 - [Node.js](https://nodejs.org/)
 - A C compiler (`gcc` or `clang`)
 
-### 1. Clone the tree-sitter-bedrock repo
+1. **Clone the tree-sitter-bedrock repo**
 
-### 2. go into the repo directory
+2. **Go into the repo directory**
 
-### 3. run these commands:
+3. **Run these commands:**
 
 ```bash
 npx tree-sitter generate
@@ -32,21 +32,21 @@ npx tree-sitter build -o bedrock.so
 
 Add the parser to your neovim configuration (tree-sitter-setup):
 
-### 1. Store the parser in a nice place
+1. **Store the parser in a nice place**
 
 ```lua
 mkdir ~/.config/nvim/parser
 cp /path/to/bedrock.so ~/.config/nvim/parser
 ```
 
-### 2. Store highlights.scm exactly here
+2. **Store highlights.scm exactly here**
 
 ```
 mkdir -p ~/.config/nvim/queries/bedrock
 cp /path/to/highlights.scm ~/.config/nvim/queries/bedrock
 ```
 
-### 3. Register .bok filetype
+3. **Register .bok filetype**
 
 > copy this snippet anywhere in your nvim config, I have done it in my `options.lua`
 
@@ -58,7 +58,7 @@ vim.filetype.add({
 })
 ```
 
-### 4. autocmd to start tree-sitter
+4. **autocmd to start tree-sitter**
 
 > put this snippet in your autocmds file or init.lua
 
