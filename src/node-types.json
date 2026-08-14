@@ -230,11 +230,6 @@
     }
   },
   {
-    "type": "expression",
-    "named": true,
-    "fields": {}
-  },
-  {
     "type": "extern_def",
     "named": true,
     "fields": {},
@@ -607,9 +602,34 @@
     }
   },
   {
+    "type": "return_expr",
+    "named": true,
+    "fields": {},
+    "children": {
+      "multiple": false,
+      "required": false,
+      "types": [
+        {
+          "type": "expression",
+          "named": true
+        }
+      ]
+    }
+  },
+  {
     "type": "return_stmt",
     "named": true,
-    "fields": {}
+    "fields": {},
+    "children": {
+      "multiple": false,
+      "required": true,
+      "types": [
+        {
+          "type": "return_expr",
+          "named": true
+        }
+      ]
+    }
   },
   {
     "type": "statement",
@@ -628,11 +648,27 @@
           "named": true
         },
         {
+          "type": "control_flow_stmt",
+          "named": true
+        },
+        {
           "type": "defer_stmt",
           "named": true
         },
         {
+          "type": "expr_stmt",
+          "named": true
+        },
+        {
           "type": "local_static_var_stmt",
+          "named": true
+        },
+        {
+          "type": "return_stmt",
+          "named": true
+        },
+        {
+          "type": "unsafe_stmt",
           "named": true
         },
         {
@@ -797,6 +833,21 @@
       "types": [
         {
           "type": "type_param",
+          "named": true
+        }
+      ]
+    }
+  },
+  {
+    "type": "unsafe_stmt",
+    "named": true,
+    "fields": {},
+    "children": {
+      "multiple": false,
+      "required": false,
+      "types": [
+        {
+          "type": "block",
           "named": true
         }
       ]
@@ -981,6 +1032,10 @@
     "named": false
   },
   {
+    "type": "expression",
+    "named": true
+  },
+  {
     "type": "extern",
     "named": false
   },
@@ -1038,6 +1093,10 @@
     "named": true
   },
   {
+    "type": "return",
+    "named": false
+  },
+  {
     "type": "static",
     "named": false
   },
@@ -1047,10 +1106,6 @@
   },
   {
     "type": "struct",
-    "named": false
-  },
-  {
-    "type": "todo",
     "named": false
   },
   {
@@ -1071,6 +1126,10 @@
   },
   {
     "type": "u8",
+    "named": false
+  },
+  {
+    "type": "unsafe",
     "named": false
   },
   {

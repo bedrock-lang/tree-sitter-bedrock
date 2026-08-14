@@ -202,10 +202,10 @@ module.exports = grammar({
       $.local_static_var_stmt,
       $.assign_stmt,
       $.defer_stmt,
-      // $.unsafe_stmt,
-      // $.control_flow_stmt,
-      // $.return_stmt,
-      // $.expr_stmt
+      $.unsafe_stmt,
+      $.control_flow_stmt,
+      $.return_stmt,
+      $.expr_stmt
     ),
 
     var_stmt: $ => seq(
@@ -261,8 +261,9 @@ module.exports = grammar({
     ),
 
     control_flow_stmt: $ => prec.dynamic(1, $.control_flow_expr),
-    return_stmt: $ => "todo",
+    return_stmt: $ => seq($.return_expr, ';'),
     expr_stmt: $ => seq($.expression, ';'),
+    unsafe_stmt: $ => seq('unsafe', optional($.block), 'end'),
 
     // Types //
     type: $ => choice(
@@ -324,11 +325,14 @@ module.exports = grammar({
     ),
 
     control_flow_expr: $ => choice(
+      // todo
       // $.if_expr,
       // $.match_expr,
       // $.while_expr,
       // $.for_expr
     ),
+
+    return_expr: $ => seq('return', optional($.expression)),
 
     comptime_expr: $ => "todo",
     array_literal: $ => "todo",
