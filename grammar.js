@@ -24,7 +24,7 @@ module.exports = grammar({
       $.proc,
       $.struct_def,
       $.enum_def,
-      // $.extern_def,
+      $.extern_def,
       // $.global_var_def,
       // $.const_def
     ),
@@ -62,6 +62,7 @@ module.exports = grammar({
 
     block: $ => repeat1($.statement),
 
+    // function and proc //
     function: $ => seq(
       optional($.pub),
       optional('inline'),
@@ -88,6 +89,20 @@ module.exports = grammar({
       optional($.block),
       'end'
     ),
+
+    // extern //
+    extern_def: $ => seq(
+      'extern',
+      choice(
+        seq('func', $.IDENT, '(', optional($.extern_params), ')', '->', $.type),
+        seq('proc', $.IDENT, '(', optional($.extern_params), ')')
+      )
+    ),
+    extern_params: $ => choice(
+      seq(commaSep1($, $.extern_param), optional(seq(',', '...'))),
+      '...'
+    ),
+    extern_param: $ => seq($.IDENT, ':', $.type),
 
     // Structs and Enums //
 

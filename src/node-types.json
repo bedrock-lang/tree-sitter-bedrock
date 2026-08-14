@@ -91,6 +91,63 @@
     }
   },
   {
+    "type": "extern_def",
+    "named": true,
+    "fields": {},
+    "children": {
+      "multiple": true,
+      "required": true,
+      "types": [
+        {
+          "type": "IDENT",
+          "named": true
+        },
+        {
+          "type": "extern_params",
+          "named": true
+        },
+        {
+          "type": "type",
+          "named": true
+        }
+      ]
+    }
+  },
+  {
+    "type": "extern_param",
+    "named": true,
+    "fields": {},
+    "children": {
+      "multiple": true,
+      "required": true,
+      "types": [
+        {
+          "type": "IDENT",
+          "named": true
+        },
+        {
+          "type": "type",
+          "named": true
+        }
+      ]
+    }
+  },
+  {
+    "type": "extern_params",
+    "named": true,
+    "fields": {},
+    "children": {
+      "multiple": true,
+      "required": false,
+      "types": [
+        {
+          "type": "extern_param",
+          "named": true
+        }
+      ]
+    }
+  },
+  {
     "type": "func_type",
     "named": true,
     "fields": {},
@@ -169,6 +226,10 @@
       "types": [
         {
           "type": "enum_def",
+          "named": true
+        },
+        {
+          "type": "extern_def",
           "named": true
         },
         {
@@ -549,6 +610,10 @@
     "named": false
   },
   {
+    "type": "...",
+    "named": false
+  },
+  {
     "type": ":",
     "named": false
   },
@@ -602,6 +667,10 @@
   },
   {
     "type": "enum",
+    "named": false
+  },
+  {
+    "type": "extern",
     "named": false
   },
   {
