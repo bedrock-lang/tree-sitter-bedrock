@@ -108,10 +108,39 @@ module.exports = grammar({
     ),
 
     struct_field: $ => seq(
-      //todo:
+      optional($.pub),
+      $.IDENT,
+      ':',
+      optional('?'),
+      $.type
     ),
 
     method_def: $ => choice(
+      seq(
+        optional($.pub),
+        optional('inline'),
+        'func',
+        $.IDENT,
+        optional($.type_params),
+        '(',
+        optional($.params),
+        ')',
+        optional($.result),
+        optional($.block),
+        'end'
+      ),
+      seq(
+        optional($.pub),
+        optional('inline'),
+        'proc',
+        $.IDENT,
+        optional($.type_params),
+        '(',
+        optional($.params),
+        ')',
+        optional($.block),
+        'end'
+      )
     ),
 
     // Statements //
