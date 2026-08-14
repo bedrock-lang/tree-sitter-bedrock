@@ -193,16 +193,45 @@ module.exports = grammar({
     ),
 
     // Statements //
+
     statement: $ => choice(
-      // $.var_stmt,
-      // $.const_stmt,
-      // $.local_static_var_stmt,
+      $.var_stmt,
+      $.const_stmt,
+      $.local_static_var_stmt,
       // $.assign_stmt,
       // $.defer_stmt,
       // $.unsafe_stmt,
       // $.control_flow_stmt,
       // $.return_stmt,
       // $.expr_stmt
+    ),
+
+    var_stmt: $ => seq(
+      'var',
+      $.IDENT,
+      optional(seq(':', optional('?'), $.type)),
+      '=',
+      $.expression,
+      ';'
+    ),
+
+    const_stmt: $ => seq(
+      'const',
+      $.IDENT,
+      optional(seq(':', optional('?'), $.type)),
+      '=',
+      $.expression,
+      ';'
+    ),
+
+    local_static_var_stmt: $ => seq(
+      'static',
+      'var',
+      $.IDENT,
+      optional(seq(':', optional('?'), $.type)),
+      '=',
+      $.expression,
+      ';'
     ),
 
     // Types //
