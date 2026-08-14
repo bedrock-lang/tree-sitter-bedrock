@@ -111,7 +111,15 @@
       "required": true,
       "types": [
         {
+          "type": "for_expr",
+          "named": true
+        },
+        {
           "type": "if_expr",
+          "named": true
+        },
+        {
+          "type": "while_expr",
           "named": true
         }
       ]
@@ -325,6 +333,29 @@
       "types": [
         {
           "type": "extern_param",
+          "named": true
+        }
+      ]
+    }
+  },
+  {
+    "type": "for_expr",
+    "named": true,
+    "fields": {},
+    "children": {
+      "multiple": true,
+      "required": true,
+      "types": [
+        {
+          "type": "IDENT",
+          "named": true
+        },
+        {
+          "type": "block",
+          "named": true
+        },
+        {
+          "type": "expression",
           "named": true
         }
       ]
@@ -975,6 +1006,25 @@
     }
   },
   {
+    "type": "while_expr",
+    "named": true,
+    "fields": {},
+    "children": {
+      "multiple": true,
+      "required": true,
+      "types": [
+        {
+          "type": "block",
+          "named": true
+        },
+        {
+          "type": "expression",
+          "named": true
+        }
+      ]
+    }
+  },
+  {
     "type": "!",
     "named": false
   },
@@ -1127,6 +1177,10 @@
     "named": false
   },
   {
+    "type": "for",
+    "named": false
+  },
+  {
     "type": "func",
     "named": false
   },
@@ -1152,6 +1206,10 @@
   },
   {
     "type": "import",
+    "named": false
+  },
+  {
+    "type": "in",
     "named": false
   },
   {
@@ -1221,6 +1279,10 @@
   },
   {
     "type": "var",
+    "named": false
+  },
+  {
+    "type": "while",
     "named": false
   },
   {

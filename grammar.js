@@ -327,8 +327,8 @@ module.exports = grammar({
     control_flow_expr: $ => choice(
       $.if_expr,
       // $.match_expr,
-      // $.while_expr,
-      // $.for_expr
+      $.while_expr,
+      $.for_expr
     ),
     if_expr: $ => seq(
       'if',
@@ -340,6 +340,10 @@ module.exports = grammar({
     ),
     elif_clause: $ => seq('elif', $.expression, optional($.block)),
     else_clause: $ => seq('else', optional($.block)),
+
+    while_expr: $ => seq('while', $.expression, optional($.block), 'end'),
+
+    for_expr: $ => seq('for', $.IDENT, 'in', $.expression, optional($.block), 'end'),
 
     return_expr: $ => seq('return', optional($.expression)),
 
