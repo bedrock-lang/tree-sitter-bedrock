@@ -321,8 +321,6 @@ module.exports = grammar({
       repeat(seq('||', $.and_expr))
     )),
 
-    and_expr: $ => "todo",
-
     and_expr: $ => prec.left(3, seq(
       $.comparison,
       repeat(seq('&&', $.comparison))
@@ -403,7 +401,7 @@ module.exports = grammar({
 
     control_flow_expr: $ => choice(
       $.if_expr,
-      // $.match_expr,
+      $.match_expr,
       $.while_expr,
       $.for_expr
     ),
@@ -425,7 +423,6 @@ module.exports = grammar({
     return_expr: $ => seq('return', optional($.expression)),
 
     comptime_expr: $ => seq('comptime', optional($.block), 'end'),
-    array_literal: $ => seq('[', optional($.array_elems), ']'),
 
     match_expr: $ => seq(
       'match',
