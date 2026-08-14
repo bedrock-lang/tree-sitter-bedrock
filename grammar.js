@@ -26,7 +26,7 @@ module.exports = grammar({
       $.enum_def,
       $.extern_def,
       $.var_def,
-      // $.const_def
+      $.const_def
     ),
 
     import_def: $ => seq(
