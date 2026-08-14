@@ -103,6 +103,61 @@
     }
   },
   {
+    "type": "control_flow_expr",
+    "named": true,
+    "fields": {}
+  },
+  {
+    "type": "control_flow_stmt",
+    "named": true,
+    "fields": {},
+    "children": {
+      "multiple": false,
+      "required": true,
+      "types": [
+        {
+          "type": "control_flow_expr",
+          "named": true
+        }
+      ]
+    }
+  },
+  {
+    "type": "defer_stmt",
+    "named": true,
+    "fields": {},
+    "children": {
+      "multiple": false,
+      "required": true,
+      "types": [
+        {
+          "type": "assign_stmt",
+          "named": true
+        },
+        {
+          "type": "const_stmt",
+          "named": true
+        },
+        {
+          "type": "control_flow_stmt",
+          "named": true
+        },
+        {
+          "type": "expr_stmt",
+          "named": true
+        },
+        {
+          "type": "return_stmt",
+          "named": true
+        },
+        {
+          "type": "var_stmt",
+          "named": true
+        }
+      ]
+    }
+  },
+  {
     "type": "enum_def",
     "named": true,
     "fields": {},
@@ -158,6 +213,26 @@
         }
       ]
     }
+  },
+  {
+    "type": "expr_stmt",
+    "named": true,
+    "fields": {},
+    "children": {
+      "multiple": false,
+      "required": true,
+      "types": [
+        {
+          "type": "expression",
+          "named": true
+        }
+      ]
+    }
+  },
+  {
+    "type": "expression",
+    "named": true,
+    "fields": {}
   },
   {
     "type": "extern_def",
@@ -532,6 +607,11 @@
     }
   },
   {
+    "type": "return_stmt",
+    "named": true,
+    "fields": {}
+  },
+  {
     "type": "statement",
     "named": true,
     "fields": {},
@@ -545,6 +625,10 @@
         },
         {
           "type": "const_stmt",
+          "named": true
+        },
+        {
+          "type": "defer_stmt",
           "named": true
         },
         {
@@ -885,16 +969,16 @@
     "named": false
   },
   {
+    "type": "defer",
+    "named": false
+  },
+  {
     "type": "end",
     "named": false
   },
   {
     "type": "enum",
     "named": false
-  },
-  {
-    "type": "expression",
-    "named": true
   },
   {
     "type": "extern",
@@ -963,6 +1047,10 @@
   },
   {
     "type": "struct",
+    "named": false
+  },
+  {
+    "type": "todo",
     "named": false
   },
   {

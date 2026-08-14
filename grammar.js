@@ -260,7 +260,7 @@ module.exports = grammar({
       )
     ),
 
-    control_flow_stmt: $ => "todo",
+    control_flow_stmt: $ => prec.dynamic(1, $.control_flow_expr),
     return_stmt: $ => "todo",
     expr_stmt: $ => seq($.expression, ';'),
 
@@ -323,7 +323,13 @@ module.exports = grammar({
       seq('(', $.expression, ')')
     ),
 
-    control_flow_expr: $ => "todo",
+    control_flow_expr: $ => choice(
+      // $.if_expr,
+      // $.match_expr,
+      // $.while_expr,
+      // $.for_expr
+    ),
+
     comptime_expr: $ => "todo",
     array_literal: $ => "todo",
 

@@ -1502,8 +1502,12 @@
       ]
     },
     "control_flow_stmt": {
-      "type": "STRING",
-      "value": "todo"
+      "type": "PREC_DYNAMIC",
+      "value": 1,
+      "content": {
+        "type": "SYMBOL",
+        "name": "control_flow_expr"
+      }
     },
     "return_stmt": {
       "type": "STRING",
@@ -1875,8 +1879,8 @@
       ]
     },
     "control_flow_expr": {
-      "type": "STRING",
-      "value": "todo"
+      "type": "CHOICE",
+      "members": []
     },
     "comptime_expr": {
       "type": "STRING",
