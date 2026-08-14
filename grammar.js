@@ -11,6 +11,8 @@ module.exports = grammar({
   word: $ => $.IDENT,
 
   conflicts: $ => [
+    [$.control_flow_stmt, $.primary],
+    [$.named_type],
     [$.result],
   ],
 
@@ -308,6 +310,23 @@ module.exports = grammar({
     // expressions //
     expression: $ => 'todo',
 
+    primary: $ => choice(
+      $.INTEGER,
+      $.FLOAT,
+      $.CHAR,
+      $.STRING,
+      $.BOOL,
+      $.IDENT,
+      $.control_flow_expr,
+      $.comptime_expr,
+      $.array_literal,
+      seq('(', $.expression, ')')
+    ),
+
+    control_flow_expr: $ => "todo",
+    comptime_expr: $ => "todo",
+    array_literal: $ => "todo",
+
     // lexical tokens //
     IDENT: $ => /[A-Za-z_][A-Za-z0-9_]*/,
     line_comment: $ => token(seq('//', /.*/)),
@@ -318,6 +337,34 @@ module.exports = grammar({
       seq('0b', /[01_]+/),
       /[0-9_]+/
     )),
+    FLOAT: $ => token(seq(
+      /[0-9_]+/,
+      '.',
+      /[0-9_]+/
+    )),
+    CHAR: $ => token(seq(
+      "'",
+      choice(
+        /[^'\\\n]/,
+        seq('\\', choice('\\', '"', 'n', 't', 'r', '0'))
+      ),
+      "'"
+    )),
+
+    STRING: $ => token(seq(
+      '"',
+      repeat(choice(
+        /[^"\\\n]/,
+        seq('\\', choice('\\', '"', 'n', 't', 'r', '0'))
+      )),
+      '"'
+    )),
+
+    BOOL: $ => choice('true', 'false'),
+
+    line_comment: $ => token(seq('//', /.*/)),
+
+    pub: $ => 'pub',
   }
 });
 
