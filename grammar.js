@@ -21,7 +21,7 @@ module.exports = grammar({
     item: $ => choice(
       $.import_def,
       $.function,
-      // $.proc_def,
+      $.proc,
       // $.struct_def,
       // $.enum_def,
       // $.extern_def,
@@ -72,6 +72,19 @@ module.exports = grammar({
       optional($.params),
       ')',
       optional($.result),
+      optional($.block),
+      'end'
+    ),
+
+    proc: $ => seq(
+      optional($.pub),
+      optional('inline'),
+      'proc',
+      $.IDENT,
+      optional($.type_params),
+      '(',
+      optional($.params),
+      ')',
       optional($.block),
       'end'
     ),

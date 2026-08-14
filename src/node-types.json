@@ -117,6 +117,10 @@
         {
           "type": "import_def",
           "named": true
+        },
+        {
+          "type": "proc",
+          "named": true
         }
       ]
     }
@@ -169,6 +173,37 @@
       "types": [
         {
           "type": "param",
+          "named": true
+        }
+      ]
+    }
+  },
+  {
+    "type": "proc",
+    "named": true,
+    "fields": {},
+    "children": {
+      "multiple": true,
+      "required": true,
+      "types": [
+        {
+          "type": "IDENT",
+          "named": true
+        },
+        {
+          "type": "block",
+          "named": true
+        },
+        {
+          "type": "params",
+          "named": true
+        },
+        {
+          "type": "pub",
+          "named": true
+        },
+        {
+          "type": "type_params",
           "named": true
         }
       ]
