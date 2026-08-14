@@ -325,12 +325,21 @@ module.exports = grammar({
     ),
 
     control_flow_expr: $ => choice(
-      // todo
-      // $.if_expr,
+      $.if_expr,
       // $.match_expr,
       // $.while_expr,
       // $.for_expr
     ),
+    if_expr: $ => seq(
+      'if',
+      $.expression,
+      optional($.block),
+      repeat($.elif_clause),
+      optional($.else_clause),
+      'end'
+    ),
+    elif_clause: $ => seq('elif', $.expression, optional($.block)),
+    else_clause: $ => seq('else', optional($.block)),
 
     return_expr: $ => seq('return', optional($.expression)),
 

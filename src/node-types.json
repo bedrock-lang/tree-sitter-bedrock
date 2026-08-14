@@ -105,7 +105,17 @@
   {
     "type": "control_flow_expr",
     "named": true,
-    "fields": {}
+    "fields": {},
+    "children": {
+      "multiple": false,
+      "required": true,
+      "types": [
+        {
+          "type": "if_expr",
+          "named": true
+        }
+      ]
+    }
   },
   {
     "type": "control_flow_stmt",
@@ -152,6 +162,40 @@
         },
         {
           "type": "var_stmt",
+          "named": true
+        }
+      ]
+    }
+  },
+  {
+    "type": "elif_clause",
+    "named": true,
+    "fields": {},
+    "children": {
+      "multiple": true,
+      "required": true,
+      "types": [
+        {
+          "type": "block",
+          "named": true
+        },
+        {
+          "type": "expression",
+          "named": true
+        }
+      ]
+    }
+  },
+  {
+    "type": "else_clause",
+    "named": true,
+    "fields": {},
+    "children": {
+      "multiple": false,
+      "required": false,
+      "types": [
+        {
+          "type": "block",
           "named": true
         }
       ]
@@ -335,6 +379,33 @@
         },
         {
           "type": "type_params",
+          "named": true
+        }
+      ]
+    }
+  },
+  {
+    "type": "if_expr",
+    "named": true,
+    "fields": {},
+    "children": {
+      "multiple": true,
+      "required": true,
+      "types": [
+        {
+          "type": "block",
+          "named": true
+        },
+        {
+          "type": "elif_clause",
+          "named": true
+        },
+        {
+          "type": "else_clause",
+          "named": true
+        },
+        {
+          "type": "expression",
           "named": true
         }
       ]
@@ -1024,6 +1095,14 @@
     "named": false
   },
   {
+    "type": "elif",
+    "named": false
+  },
+  {
+    "type": "else",
+    "named": false
+  },
+  {
     "type": "end",
     "named": false
   },
@@ -1065,6 +1144,10 @@
   },
   {
     "type": "i8",
+    "named": false
+  },
+  {
+    "type": "if",
     "named": false
   },
   {
