@@ -347,8 +347,31 @@ module.exports = grammar({
 
     return_expr: $ => seq('return', optional($.expression)),
 
-    comptime_expr: $ => "todo",
-    array_literal: $ => "todo",
+    comptime_expr: $ => seq('comptime', optional($.block), 'end'),
+    array_literal: $ => seq('[', optional($.array_elems), ']'),
+
+    match_expr: $ => seq(
+      'match',
+      $.expression,
+      optional($.match_arms),
+      'end'
+    ),
+    match_arms: $ => seq(
+      repeat1($.match_arm),
+      optional($.else_arm)
+    ),
+    match_arm: $ => seq('case', $.pattern, optional($.block)),
+    else_arm: $ => seq('else', optional($.block)),
+    pattern: $ => choice($.INTEGER, $.BOOL, $.IDENT),
+
+    array_literal: $ => seq('[', optional($.array_elems), ']'),
+    array_elems: $ => commaSep1($, $.expression),
+
+    call_args: $ => commaSep1($, $.call_arg),
+    call_arg: $ => seq(
+      optional(seq($.IDENT, '=')),
+      $.expression
+    ),
 
     // lexical tokens //
     IDENT: $ => /[A-Za-z_][A-Za-z0-9_]*/,
