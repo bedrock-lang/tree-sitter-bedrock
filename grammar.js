@@ -6,14 +6,12 @@ module.exports = grammar({
     $.line_comment,
   ],
 
-  externals: $ => [],
-
   word: $ => $.IDENT,
 
   conflicts: $ => [
     [$.control_flow_stmt, $.primary],
+    [$.place_expr, $.primary],
     [$.named_type],
-    [$.result],
   ],
 
   rules: {
@@ -23,7 +21,7 @@ module.exports = grammar({
     item: $ => choice(
       $.import_def,
       $.function,
-      $.proc,
+      $.proc_def,
       $.struct_def,
       $.enum_def,
       $.extern_def,
@@ -38,33 +36,11 @@ module.exports = grammar({
       ';'
     ),
 
-    type_params: $ => seq(
-      '[',
-      commaSep1($, $.type_param),
-      ']'
-    ),
+    // Generics //
+    type_params: $ => seq('[', commaSep1($, $.type_param), ']'),
     type_param: $ => $.IDENT,
 
-    result: $ => seq(
-      '->',
-      choice(
-        seq('?', $.type),
-        seq($.type, optional(prec(10, '!')))
-      )
-    ),
-
-    params: $ => commaSep1($, $.param),
-    param: $ => seq(
-      $.IDENT,
-      ':',
-      optional('?'),
-      optional('const'),
-      $.type
-    ),
-
-    block: $ => repeat1($.statement),
-
-    // function and proc //
+    // Functions and procedures //
     function: $ => seq(
       optional($.pub),
       optional('inline'),
@@ -74,12 +50,12 @@ module.exports = grammar({
       '(',
       optional($.params),
       ')',
-      optional($.result),
+      $.result,
       optional($.block),
       'end'
     ),
 
-    proc: $ => seq(
+    proc_def: $ => seq(
       optional($.pub),
       optional('inline'),
       'proc',
@@ -92,13 +68,26 @@ module.exports = grammar({
       'end'
     ),
 
-    // extern //
+    result: $ => seq('->', $.type),
+
+    params: $ => commaSep1($, $.param),
+    param: $ => seq(
+      $.IDENT,
+      ':',
+      optional('const'),
+      $.type
+    ),
+
+    block: $ => repeat1($.statement),
+
+    // Foreign function interface //
     extern_def: $ => seq(
       'extern',
       choice(
         seq('func', $.IDENT, '(', optional($.extern_params), ')', '->', $.type),
         seq('proc', $.IDENT, '(', optional($.extern_params), ')')
-      )
+      ),
+      ';'
     ),
     extern_params: $ => choice(
       seq(commaSep1($, $.extern_param), optional(seq(',', '...'))),
@@ -123,12 +112,10 @@ module.exports = grammar({
       seq($.struct_field, ','),
       $.method_def
     ),
-
     struct_field: $ => seq(
       optional($.pub),
       $.IDENT,
       ':',
-      optional('?'),
       $.type
     ),
 
@@ -142,7 +129,7 @@ module.exports = grammar({
         '(',
         optional($.params),
         ')',
-        optional($.result),
+        $.result,
         optional($.block),
         'end'
       ),
@@ -160,6 +147,15 @@ module.exports = grammar({
       )
     ),
 
+    struct_literal: $ => seq(
+      choice($.IDENT, '_'),
+      'where',
+      optional($.field_inits),
+      'end'
+    ),
+    field_inits: $ => commaSep1($, $.field_init),
+    field_init: $ => seq($.IDENT, '=', $.expression),
+
     enum_def: $ => seq(
       optional($.pub),
       'type',
@@ -171,14 +167,17 @@ module.exports = grammar({
       'end'
     ),
     enum_variants: $ => commaSep1($, $.enum_variant),
-    enum_variant: $ => $.IDENT,
+    enum_variant: $ => seq(
+      $.IDENT,
+      optional(seq('(', $.type_list, ')'))
+    ),
 
     // var and const //
     var_def: $ => seq(
       optional($.pub),
       'var',
       $.IDENT,
-      optional(seq(':', optional('?'), $.type)),
+      optional(seq(':', $.type)),
       '=',
       $.expression,
       ';'
@@ -188,17 +187,15 @@ module.exports = grammar({
       optional($.pub),
       'const',
       $.IDENT,
-      optional(seq(':', optional('?'), $.type)),
+      optional(seq(':', $.type)),
       '=',
       $.expression,
       ';'
     ),
 
     // Statements //
-
     statement: $ => choice(
       $.var_stmt,
-      $.const_stmt,
       $.local_static_var_stmt,
       $.assign_stmt,
       $.defer_stmt,
@@ -211,16 +208,7 @@ module.exports = grammar({
     var_stmt: $ => seq(
       'var',
       $.IDENT,
-      optional(seq(':', optional('?'), $.type)),
-      '=',
-      $.expression,
-      ';'
-    ),
-
-    const_stmt: $ => seq(
-      'const',
-      $.IDENT,
-      optional(seq(':', optional('?'), $.type)),
+      optional(seq(':', $.type)),
       '=',
       $.expression,
       ';'
@@ -230,43 +218,52 @@ module.exports = grammar({
       'static',
       'var',
       $.IDENT,
-      optional(seq(':', optional('?'), $.type)),
+      optional(seq(':', $.type)),
       '=',
       $.expression,
       ';'
     ),
 
-    place_expr: $ => $.expression,
+    place_expr: $ => choice(
+      seq('*', '(', $.expression, ')'),
+      seq('*', $.IDENT),
+      seq(
+        $.IDENT,
+        repeat(choice(
+          seq('.', $.IDENT),
+          seq('[', $.expression, ']')
+        ))
+      )
+    ),
+
+    compound_op: $ => choice(
+      '+=', '-=', '*=', '/=', '%=',
+      '&=', '|=', '^=', '<<=', '>>='
+    ),
+
     assign_stmt: $ => seq(
       $.place_expr,
-      choice(
-        '=',
-        '+=', '-=', '*=', '/=', '%=',
-        '&=', '|=', '^=', '<<=', '>>='
-      ),
+      choice('=', $.compound_op),
       $.expression,
       ';'
     ),
 
-    defer_stmt: $ => seq(
-      'defer',
-      choice(
-        $.var_stmt,
-        $.const_stmt,
-        $.assign_stmt,
-        $.control_flow_stmt,
-        $.return_stmt,
-        $.expr_stmt
-      )
-    ),
+    defer_stmt: $ => seq('defer', optional($.block), 'end'),
+    unsafe_stmt: $ => seq('unsafe', optional($.block), 'end'),
 
     control_flow_stmt: $ => prec.dynamic(1, $.control_flow_expr),
     return_stmt: $ => seq($.return_expr, ';'),
     expr_stmt: $ => seq($.expression, ';'),
-    unsafe_stmt: $ => seq('unsafe', optional($.block), 'end'),
 
     // Types //
-    type: $ => choice(
+    // `*T!` parses as `*(T!)`
+    type: $ => prec.right(seq(
+      optional('?'),
+      $.base_type,
+      optional('!')
+    )),
+
+    base_type: $ => choice(
       'i8', 'i16', 'i32', 'i64',
       'u8', 'u16', 'u32', 'u64',
       'usize', 'isize',
@@ -274,17 +271,14 @@ module.exports = grammar({
       'bool', 'char', 'str',
       seq('*', $.type),
       $.array_type,
+      $.slice_type,
       $.named_type,
       $.func_type,
       $.proc_type
     ),
 
-    array_type: $ => seq(
-      '[',
-      choice($.INTEGER, '_'),
-      ']',
-      $.type
-    ),
+    array_type: $ => seq('[', choice($.INTEGER, '_'), ']', $.type),
+    slice_type: $ => seq('[', ']', $.type),
 
     named_type: $ => seq(
       $.IDENT,
@@ -294,26 +288,20 @@ module.exports = grammar({
     type_list: $ => commaSep1($, $.type),
 
     func_type: $ => seq(
-      'func',
-      '(',
-      optional($.type_list),
-      ')',
-      $.result
+      'func', '(', optional($.type_list), ')', $.result
     ),
 
     proc_type: $ => seq(
-      'proc',
-      '(',
-      optional($.type_list),
-      ')'
+      'proc', '(', optional($.type_list), ')'
     ),
 
     // expressions //
     expression: $ => $.orelse_expr,
 
-    orelse_expr: $ => prec.left(1, seq(
+    // right-associative: or_expr [ "orelse" expression ]
+    orelse_expr: $ => prec.right(1, seq(
       $.or_expr,
-      repeat(seq('orelse', $.or_expr))
+      optional(seq('orelse', $.expression))
     )),
 
     or_expr: $ => prec.left(2, seq(
@@ -356,7 +344,7 @@ module.exports = grammar({
 
     range_expr: $ => prec.left(9, seq(
       $.additive,
-      optional(seq('..', $.additive))
+      optional(seq(choice('..', '..='), $.additive))
     )),
 
     additive: $ => prec.left(10, seq(
@@ -370,7 +358,7 @@ module.exports = grammar({
     )),
 
     unary: $ => choice(
-      prec.right(12, seq(choice('-', '!', '~', '&', '*'), $.unary)),
+      prec.right(12, seq(choice('-', '!', '~', '&', '*', 'try'), $.unary)),
       $.postfix
     ),
 
@@ -396,6 +384,7 @@ module.exports = grammar({
       $.control_flow_expr,
       $.comptime_expr,
       $.array_literal,
+      $.struct_literal,
       seq('(', $.expression, ')')
     ),
 
@@ -405,6 +394,7 @@ module.exports = grammar({
       $.while_expr,
       $.for_expr
     ),
+
     if_expr: $ => seq(
       'if',
       $.expression,
@@ -418,12 +408,22 @@ module.exports = grammar({
 
     while_expr: $ => seq('while', $.expression, optional($.block), 'end'),
 
-    for_expr: $ => seq('for', $.IDENT, 'in', $.expression, optional($.block), 'end'),
+    for_expr: $ => seq(
+      'for',
+      $.IDENT,
+      optional(seq(',', $.IDENT)),
+      'in',
+      $.expression,
+      optional(seq(',', $.additive, '..')),
+      optional($.block),
+      'end'
+    ),
 
     return_expr: $ => seq('return', optional($.expression)),
 
     comptime_expr: $ => seq('comptime', optional($.block), 'end'),
 
+    // Match //
     match_expr: $ => seq(
       'match',
       $.expression,
@@ -436,32 +436,43 @@ module.exports = grammar({
     ),
     match_arm: $ => seq('case', $.pattern, optional($.block)),
     else_arm: $ => seq('else', optional($.block)),
-    pattern: $ => choice($.INTEGER, $.BOOL, $.IDENT),
+
+    pattern: $ => choice($.literal_pattern, $.variant_pattern),
+    literal_pattern: $ => choice(
+      $.INTEGER, $.FLOAT, $.CHAR, $.STRING, $.BOOL
+    ),
+    variant_pattern: $ => prec.right(seq(
+      $.IDENT,
+      optional(seq('(', optional($.pattern_params), ')'))
+    )),
+    pattern_params: $ => commaSep1($, $.pattern),
 
     array_literal: $ => seq('[', optional($.array_elems), ']'),
     array_elems: $ => commaSep1($, $.expression),
 
     call_args: $ => commaSep1($, $.call_arg),
-    call_arg: $ => seq(
-      optional(seq($.IDENT, '=')),
-      $.expression
-    ),
+    call_arg: $ => $.expression,
 
     // lexical tokens //
     IDENT: $ => /[A-Za-z_][A-Za-z0-9_]*/,
+
     line_comment: $ => token(seq('//', /.*/)),
+
     pub: $ => 'pub',
+
     INTEGER: $ => token(choice(
       seq('0x', /[0-9a-fA-F_]+/),
       seq('0o', /[0-7_]+/),
       seq('0b', /[01_]+/),
-      /[0-9_]+/
+      /[0-9][0-9_]*/
     )),
+
     FLOAT: $ => token(seq(
-      /[0-9_]+/,
+      /[0-9][0-9_]*/,
       '.',
-      /[0-9_]+/
+      /[0-9][0-9_]*/
     )),
+
     CHAR: $ => token(seq(
       "'",
       choice(
@@ -481,10 +492,6 @@ module.exports = grammar({
     )),
 
     BOOL: $ => choice('true', 'false'),
-
-    line_comment: $ => token(seq('//', /.*/)),
-
-    pub: $ => 'pub',
   }
 });
 

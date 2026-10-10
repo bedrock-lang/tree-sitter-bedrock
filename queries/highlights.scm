@@ -15,6 +15,7 @@
   "enum"
   "extern"
   "static"
+  "where"
 ] @keyword
 
 [
@@ -43,6 +44,8 @@
 
 "return" @keyword.control.return
 
+"try" @keyword.control.exception
+
 [
   "defer"
   "unsafe"
@@ -63,7 +66,7 @@
 (type_param (IDENT) @type.parameter)
 
 (function (IDENT) @function)
-(proc (IDENT) @function)
+(proc_def (IDENT) @function)
 (method_def (IDENT) @function.method)
 (extern_def (IDENT) @function)
 
@@ -71,23 +74,28 @@
 (enum_def (IDENT) @type.definition)
 (enum_variant (IDENT) @constant)
 
+(struct_literal (IDENT) @type)
+(field_init (IDENT) @property)
+(variant_pattern (IDENT) @constant)
+
 (param (IDENT) @variable.parameter)
 (extern_param (IDENT) @variable.parameter)
 (struct_field (IDENT) @property)
-(call_arg (IDENT) @variable.parameter "=")
 
 (suffix "." (IDENT) @property)
+(place_expr "." (IDENT) @property)
 
 (postfix
   (primary (IDENT) @function.call)
   (suffix "("))
 
 (var_stmt (IDENT) @variable)
-(const_stmt (IDENT) @constant)
 (var_def (IDENT) @variable)
 (local_static_var_stmt (IDENT) @variable)
 (const_def (IDENT) @constant)
 (for_expr (IDENT) @variable)
+
+"_" @variable.builtin
 
 [
   "=" "+=" "-=" "*=" "/=" "%="
@@ -96,10 +104,12 @@
   "&&" "||" "!"
   "+" "-" "*" "/" "%"
   "&" "|" "^" "~" "<<" ">>"
-  ".."
+  ".." "..="
   "->"
   "?"
 ] @operator
+
+"..." @punctuation.special
 
 [ "(" ")" "[" "]" ] @punctuation.bracket
 [ "," ":" ";" ] @punctuation.delimiter
